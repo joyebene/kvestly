@@ -73,12 +73,7 @@ export async function POST(
 
     session = await mongoose.startSession();
 
-    let result: {
-      status: string;
-      amountApproved?: number;
-    } | null = null;
-
-    await session.withTransaction(async () => {
+    const result = await session.withTransaction(async () => {
       const investment = await InvestmentApplication.findById(id)
         .session(session!);
 
@@ -96,7 +91,7 @@ export async function POST(
 
         await investment.save({ session });
 
-        result = { status: "rejected" };
+        return { status: "rejected" };
         return;
       }
 
@@ -168,7 +163,7 @@ export async function POST(
 
       await investment.save({ session });
 
-      result = {
+      return {
         status: "approved",
         amountApproved,
       };
