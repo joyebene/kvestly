@@ -1,22 +1,119 @@
+
 import type { Metadata } from "next";
 import { History } from "lucide-react";
+
 import { requireUser } from "@/lib/session";
 import { connectDb } from "@/lib/db";
-import { LedgerEntry } from "@/models/LedgerEntry";
-import { PageTitle, EmptyState, Table, Td, Badge } from "@/components/dashboard/ui";
-import { money, dateTime } from "@/lib/format";
-export const metadata: Metadata = { title: "Investment history" };
+import { InvestmentPayment } from "@/models/InvestmentPayment";
+
+import {
+  PageTitle,
+  EmptyState,
+  Table,
+  Td,
+  Badge,
+} from "@/components/dashboard/ui";
+
+import { dateTime, money } from "@/lib/format";
+
+export const metadata: Metadata = {
+  title: "Investment history",
+};
+
+function formatCrypto(amount: number) {
+  return new Intl.NumberFormat("en-US", {
+    maximumFractionDigits: 8,
+  }).format(amount);
+}
 
 export default async function Page() {
-  const u = await requireUser();
+  const user = await requireUser();
+
   await connectDb();
-  const rows = await LedgerEntry.find({ userId: u.id, type: { $in: ["investment", "distribution"] } }).sort({ createdAt: -1 }).limit(100).lean();
+
+  // Retrieve all payment attempts belonging to this user.
+  const payments = await InvestmentPayment.find({
+    userId: user.id,
+  })
+    .sort({ createdAt: -1 })
+    .limit(100)
+    .lean();
+
   return (
     <>
-      <PageTitle title="Investment history" />
-      {rows.length === 0 ? <EmptyState icon={History} title="No investment history">Confirmed investments and distributions will be listed here.</EmptyState> : (
-        <Table head={["Date", "Type", "Amount", "Status"]}>
-          {rows.map((r) => <tr key={String(r._id)}><Td>{dateTime(r.createdAt)}</Td><Td className="capitalize">{r.type}</Td><Td>{r.direction === "debit" ? "−" : "+"}{money(r.amountMinor, r.currency)}</Td><Td><Badge value={r.status} /></Td></tr>)}
+      <PageTitle
+        title="Investment history"
+        intro="View your investment payment attempts, deposits and payment statuses."
+      />
+
+      {payments.length === 0 ? (
+        <EmptyState
+          icon={History}
+          title="No investment history"
+        >
+          Your cryptocurrency payment history will appear here
+          after you initiate an investment payment.
+        </EmptyState>
+      ) : (
+        <Table
+          head={[
+            "Date",
+            "Investment",
+            "Cryptocurrency",
+            "Expected payment",
+            "Amount received",
+            "USD value",
+            "Status",
+          ]}
+        >
+          {payments.map((payment) => (
+            <tr key={String(payment._id)}>
+              <Td>
+                {dateTime(payment.createdAt)}
+              </Td>
+
+              <Td>
+                <span className="font-mono text-xs">
+                  {String(payment.investmentId).slice(-8).toUpperCase()}
+                </span>
+              </Td>
+
+              <Td>
+                <div className="font-medium">
+                  {payment.cryptoCurrency}
+                </div>
+
+                <div className="text-xs text-muted-foreground">
+                  {payment.cryptoNetwork}
+                </div>
+              </Td>
+
+              <Td>
+                <div className="font-medium">
+                  {formatCrypto(payment.payAmount)}{" "}
+                  {payment.cryptoCurrency}
+                </div>
+              </Td>
+
+              <Td>
+                <div className="font-medium">
+                  {formatCrypto(payment.actuallyPaid || 0)}{" "}
+                  {payment.cryptoCurrency}
+                </div>
+              </Td>
+
+              <Td>
+                {money(
+                  Math.round(payment.priceAmount * 100),
+                  payment.priceCurrency.toUpperCase()
+                )}
+              </Td>
+
+              <Td>
+                <Badge value={payment.paymentStatus} />
+              </Td>
+            </tr>
+          ))}
         </Table>
       )}
     </>
