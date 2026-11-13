@@ -12,31 +12,28 @@ interface WalletUpdateFormProps {
 }
 
 export function WalletUpdateForm({
-  userId,
   initialWalletAddress,
 }: WalletUpdateFormProps) {
-  const [walletAddress, setWalletAddress] = useState(
-    initialWalletAddress
-  );
+  const [walletAddress, setWalletAddress] = useState(initialWalletAddress);
 
   const { run, busy, error, done } = useAction();
 
   async function handleUpdate() {
-    if (!walletAddress.trim()) {
-      return;
-    }
+    const address = walletAddress.trim();
+
+    if (!address) return;
 
     await run(
       postJson("/me/wallet", {
-        walletAddress: walletAddress.trim(),
+        walletAddress: address,
       }),
       "Wallet address updated successfully."
     );
   }
 
   return (
-    <div className="card max-w-2xl mt-6 p-5">
-      <h3 className="text-lg font-semibold mb-4">
+    <div className="card mt-6 max-w-2xl p-5">
+      <h3 className="mb-4 text-lg font-semibold">
         Update Virtual Wallet Address
       </h3>
 
@@ -47,6 +44,7 @@ export function WalletUpdateForm({
           onChange={(e) => setWalletAddress(e.target.value)}
           className="input"
           placeholder="Enter new wallet address"
+          disabled={busy}
         />
       </Field>
 
