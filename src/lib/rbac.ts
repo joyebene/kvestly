@@ -6,6 +6,8 @@ export const PERMISSIONS = [
   "users:read",
   "users:manage",
   "roles:manage",
+  "investments:read",
+  "investments:review",
 
   "products:manage",
   "products:publish",
