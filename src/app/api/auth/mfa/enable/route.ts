@@ -14,7 +14,7 @@ export const POST = handle({ auth: "user", allowUnverifiedMfa: true, schema: mfa
   if (step === null) throw new HttpError(400, "That code is not valid. Check your authenticator app and try again.", "invalid_code");
   const { plain, hashes } = newBackupCodes();
   await User.updateOne({ _id: u._id }, {
-    "mfa.enabled": true, "mfa.secretEnc": u.mfa.pendingSecretEnc, "mfa.backupCodeHashes": hashes, "mfa.lastStep": step,
+    "mfa.emfaEnabled": true, "mfa.secretEnc": u.mfa.pendingSecretEnc, "mfa.backupCodeHashes": hashes, "mfa.lastStep": step,
     $unset: { "mfa.pendingSecretEnc": 1 },
   });
   await Session.updateOne({ _id: user.sessionId }, { mfaVerified: true });
