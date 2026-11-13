@@ -8,8 +8,7 @@ export const PERMISSIONS = {
   "users.read": ["support", "compliance", "finance", "admin", "superadmin"],
   "users.suspend": ["admin", "superadmin"],
   "users.role.change": ["superadmin"],
-  "kyc.read": ["compliance", "admin", "superadmin"],
-  "kyc.review": ["compliance", "superadmin"],
+
   "products.read": ["compliance", "finance", "admin", "superadmin"],
   "products.write": ["admin", "superadmin"],
   "products.approve.compliance": ["compliance", "superadmin"],

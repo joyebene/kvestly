@@ -34,7 +34,7 @@ export const POST = handle(
 
     await User.updateOne({ _id: user._id }, { failedLogins: 0, lockedUntil: null, lastLoginAt: new Date() });
 
-    if (user.mfa?.enabled) {
+    if (user.mfa?.emfaEnabled) {
       (await cookies()).set(MFA_COOKIE, await signMfaChallenge(String(user._id)), cookieOpts(300));
       return { mfaRequired: true };
     }

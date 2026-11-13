@@ -3,7 +3,7 @@ import { Schema, model, models, type Model, Types } from "mongoose";
 const schema = new Schema(
   {
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true, index: true },
-    kind: { type: String, enum: ["account", "security", "kyc", "investment", "announcement"], default: "account" },
+    kind: { type: String, enum: ["account", "security", "investment", "announcement"], default: "account" },
     title: { type: String, required: true, maxlength: 160 },
     body: { type: String, required: true, maxlength: 2000 },
     readAt: Date,

@@ -17,15 +17,14 @@ export default async function Overview() {
   ]);
   const steps = [
     { done: u.mfaEnabled, t: "Turn on two-factor authentication", href: "/dashboard/security", avail: true },
-    { done: u.kycStatus === "approved", t: "Complete identity verification", href: "/dashboard/verification", avail: features.kyc() },
     { done: false, t: "Review approved investment opportunities", href: "/investment-opportunities", avail: true },
   ];
   return (
     <>
       <PageTitle title={`Welcome, ${u.fullName.split(" ")[0]}`} intro="Your account overview. Only verified data is shown here." />
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Stat label="Identity verification" value={<Badge value={u.kycStatus} />} />
         <Stat label="Two-factor auth" value={<Badge value={u.mfaEnabled ? "active" : "pending"} />} note={u.mfaEnabled ? "Enabled" : "Not enabled yet"} />
+        <Link href="/dashboard/invest" className="button button-primary">Invest Now</Link>
         <Stat label="Verified portfolio" value={entries ? "See Portfolio" : "—"} note={entries ? undefined : "No verified holdings yet"} />
         <Stat label="Unread notifications" value={notes.filter((n) => !n.readAt).length} />
       </div>

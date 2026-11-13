@@ -13,7 +13,7 @@ export async function FundingPage({ kind }: { kind: "deposit" | "withdrawal" }) 
   await connectDb();
   const rows = await FundingRequest.find({ userId: u.id, kind }).sort({ createdAt: -1 }).limit(100).lean();
   const enabled = features.fundingRequests();
-  const ready = enabled && u.kycStatus === "approved";
+  const ready = enabled;
   return (
     <>
       <PageTitle title={`${kind === "deposit" ? "Deposit" : "Withdrawal"} requests`} />
@@ -21,8 +21,6 @@ export async function FundingPage({ kind }: { kind: "deposit" | "withdrawal" }) 
         <EmptyState icon={Wallet} title={`${kind === "deposit" ? "Deposits" : "Withdrawals"} are not available yet`}>
           They will open only after our payment and custody arrangements and regulatory requirements are in place and verified. We will notify you here.
         </EmptyState>
-      ) : !ready ? (
-        <Alert kind="info">Identity verification must be approved before you can make a {kind} request.</Alert>
       ) : <FundingForm kind={kind} />}
       {rows.length > 0 && (
         <div className="mt-8"><Table head={["Date", "Amount", "Status", "Note"]}>

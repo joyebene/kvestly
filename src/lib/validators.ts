@@ -40,12 +40,7 @@ export const contactSchema = z.object({
   turnstileToken,
 });
 
-export const kycSchema = z.object({
-  legalName: text(2, 160),
-  dateOfBirth: z.iso.date(),
-  country,
-  idType: z.enum(["passport", "national_id", "drivers_licence", "residence_permit"]),
-});
+
 
 const money = z.string().trim().regex(/^\d{1,9}(\.\d{1,2})?$/, "Enter a valid amount.");
 export const toMinor = (s: string) => Math.round(parseFloat(s) * 100);

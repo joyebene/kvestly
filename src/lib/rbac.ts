@@ -6,7 +6,7 @@ export const PERMISSIONS = [
   "users:read",
   "users:manage",
   "roles:manage",
-  "kyc:review",
+
   "products:manage",
   "products:publish",
   "transactions:read",
@@ -23,10 +23,10 @@ export type Permission = (typeof PERMISSIONS)[number];
 const map: Record<Role, readonly Permission[]> = {
   client: [],
   support: ["users:read", "support:manage", "messages:read", "notifications:send"],
-  compliance: ["users:read", "kyc:review", "products:manage", "products:publish", "requests:read", "transactions:read", "audit:read"],
+  compliance: ["users:read", "products:manage", "products:publish", "requests:read", "transactions:read", "audit:read"],
   finance: ["users:read", "transactions:read", "requests:read", "requests:review"],
   admin: [
-    "users:read", "users:manage", "kyc:review", "products:manage", "transactions:read", "requests:read",
+    "users:read", "users:manage", "products:manage", "transactions:read", "requests:read",
     "support:manage", "messages:read", "notifications:send", "content:manage", "audit:read",
   ],
   superadmin: PERMISSIONS,

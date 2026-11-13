@@ -19,7 +19,6 @@ export default async function Page() {
   ]);
   const cards: [string, number, string, boolean][] = [
     ["Registered users", users, "/admin/users", can(u.role, "users:read")],
-    ["Identity reviews pending", kyc, "/admin/verification", can(u.role, "kyc:review")],
     ["Funding requests open", funding, "/admin/requests", can(u.role, "requests:read")],
     ["Open support tickets", tickets, "/admin/communications", can(u.role, "support:manage")],
     ["New contact messages", msgs, "/admin/communications", can(u.role, "messages:read")],

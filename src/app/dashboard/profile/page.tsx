@@ -12,7 +12,7 @@ export default async function Page() {
   const doc = await User.findById(u.id).lean();
   const rows: [string, React.ReactNode][] = [
     ["Full name", u.fullName], ["Email", u.email], ["Country", doc?.country ?? "Not provided"],
-    ["Email verified", <Badge key="e" value={u.emailVerified ? "approved" : "pending"} />], ["Identity verification", <Badge key="k" value={u.kycStatus} />],
+    ["Email verified", <Badge key="e" value={u.emailVerified ? "approved" : "pending"} />],
     ["Member since", doc?.createdAt ? dateOnly(doc.createdAt) : "—"], ["Role", <span key="r" className="capitalize">{u.role}</span>],
   ];
   return (

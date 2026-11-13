@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 const all: { href: string; label: string; icon: string; perm?: Permission }[] = [
   { href: "/admin", label: "Overview", icon: "LayoutDashboard" },
   { href: "/admin/users", label: "Users", icon: "Users", perm: "users:read" },
-  { href: "/admin/verification", label: "Identity review", icon: "BadgeCheck", perm: "kyc:review" },
+
   { href: "/admin/products", label: "Investment products", icon: "Package", perm: "products:manage" },
   { href: "/admin/transactions", label: "Transactions", icon: "ArrowLeftRight", perm: "transactions:read" },
   { href: "/admin/requests", label: "Deposit & withdrawal", icon: "Inbox", perm: "requests:read" },

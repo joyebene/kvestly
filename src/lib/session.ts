@@ -20,7 +20,6 @@ export interface AuthedUser {
   email: string;
   fullName: string;
   role: Role;
-  kycStatus: string;
   mfaEnabled: boolean;
   mfaVerified: boolean;
   emailVerified: boolean;
@@ -78,8 +77,7 @@ export async function getAuth(): Promise<AuthedUser | null> {
     email: user.email,
     fullName: user.fullName,
     role: user.role as Role,
-    kycStatus: user.kycStatus,
-    mfaEnabled: user.mfa?.enabled ?? false,
+    mfaEnabled: user.mfa?.emfaEnabled ?? false,
     mfaVerified: s.mfaVerified,
     emailVerified: Boolean(user.emailVerifiedAt),
   };

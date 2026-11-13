@@ -18,7 +18,7 @@ export const POST = handle({ auth: "none", schema: mfaLoginSchema, limit: ["mfa"
   await rateLimit("mfa:user", uid, 6, 600);
 
   const user = await User.findById(uid).select("+mfa.secretEnc +mfa.backupCodeHashes +mfa.lastStep");
-  if (!user || user.status !== "active" || !user.mfa?.enabled || !user.mfa.secretEnc) throw new HttpError(401, "Invalid code.", "invalid_code");
+  if (!user || user.status !== "active" || !user.mfa?.emfaEnabled || !user.mfa.secretEnc) throw new HttpError(401, "Invalid code.", "invalid_code");
 
   const code = body.code.replace(/\s/g, "");
   let valid = false;

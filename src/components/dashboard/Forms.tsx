@@ -24,25 +24,6 @@ function useAction(onOk?: (d: Record<string, unknown>) => void) {
   return { busy, error, fields, done, run };
 }
 
-export function KycForm() {
-  const a = useAction();
-  return (
-    <form className="card max-w-xl space-y-5 p-6" onSubmit={(e) => { e.preventDefault(); const f = Object.fromEntries(new FormData(e.currentTarget)); a.run(postJson("/api/me/kyc", f), "Submitted for review."); }}>
-      {a.error && <Alert kind="error">{a.error}</Alert>}{a.done && <Alert kind="success">{a.done}</Alert>}
-      <Field label="Full legal name" name="legalName" required error={a.fields.legalName} />
-      <Field label="Date of birth" name="dateOfBirth" type="date" required error={a.fields.dateOfBirth} />
-      <Field label="Country (2-letter code)" name="country" maxLength={2} placeholder="e.g. NG" required error={a.fields.country} />
-      <div>
-        <label htmlFor="idType" className="mb-2 block text-sm font-medium text-silver-200">Identity document type</label>
-        <select id="idType" name="idType" className="input" required defaultValue="passport">
-          <option value="passport">Passport</option><option value="national_id">National ID</option><option value="drivers_licence">Driver&apos;s licence</option><option value="residence_permit">Residence permit</option>
-        </select>
-      </div>
-      <Alert kind="info">Document upload will be enabled together with an encrypted storage / KYC provider. Do not email identity documents.</Alert>
-      <Button type="submit" disabled={a.busy}>{a.busy ? <Loader2 size={16} className="animate-spin" /> : null} Submit for review</Button>
-    </form>
-  );
-}
 
 export function FundingForm({ kind }: { kind: "deposit" | "withdrawal" }) {
   const a = useAction();

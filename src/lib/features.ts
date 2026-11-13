@@ -5,7 +5,7 @@ const on = (k: string, d = false) => {
 };
 export const features = {
   registration: () => on("FEATURE_REGISTRATION", true),
-  kyc: () => on("FEATURE_KYC", false),
+
   fundingRequests: () => on("FEATURE_FUNDING_REQUESTS", false),
   demo: () => on("FEATURE_DEMO_ENVIRONMENT", false),
 };
