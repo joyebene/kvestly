@@ -347,7 +347,7 @@ export default function InvestmentForm() {
             Deposit Address
           </p>
 
-          <div className="break-all rounded-xl border bg-gray-50 p-4 text-sm">
+          <div className="break-all rounded-xl border bg-gray-50 p-4 text-sm text-black">
             {payment.address}
           </div>
 
@@ -396,7 +396,7 @@ export default function InvestmentForm() {
           </p>
         </div>
 
-        <div className="rounded-lg bg-gray-50 p-4 text-sm">
+        <div className="rounded-lg bg-gray-50 p-4 text-sm text-black">
           <p>
             <strong>Currency:</strong> {payment.currency}
           </p>
@@ -517,7 +517,7 @@ export default function InvestmentForm() {
           Your selected payment method
         </p>
 
-        <p className="mt-1 font-semibold">
+        <p className="mt-1 font-semibold text-black">
           {selectedCrypto.name} ({cryptoCurrency})
         </p>
 
