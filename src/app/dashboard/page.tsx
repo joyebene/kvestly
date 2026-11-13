@@ -40,7 +40,6 @@ export default async function Overview() {
               </li>
             ))}
           </ul>
-          <p className="mt-6 rounded-xl border border-white/[.07] bg-white/[.03] p-4 text-xs leading-relaxed text-silver-500">Investment products, deposits and withdrawals are not yet open. We will notify you here as each becomes available. Investing involves risk, including loss of capital.</p>
         </section>
 
         <section aria-labelledby="recent" className="card p-6">
