@@ -1,26 +1,49 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  :root { color-scheme: dark; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body {
+    @apply bg-navy-950 font-sans text-silver-300 antialiased;
+    background-image: radial-gradient(70% 40% at 80% -5%, rgba(47,123,255,.14), transparent 70%),
+      radial-gradient(50% 30% at 0% 30%, rgba(29,78,216,.10), transparent 70%);
+    background-attachment: fixed;
   }
+  h1, h2, h3, h4 { @apply font-display tracking-tight text-white; }
+  ::selection { background: rgba(47,123,255,.45); color: #fff; }
+  :focus-visible { outline: 2px solid #5b9bff; outline-offset: 3px; border-radius: 6px; }
+  a { @apply transition-colors; }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .container-x { @apply mx-auto w-full max-w-7xl px-5 sm:px-8; }
+  .eyebrow { @apply inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[.22em] text-electric-400; }
+  .eyebrow::before { content: ""; @apply h-px w-8 bg-electric/60; }
+  .text-silver-gradient { @apply bg-silver-sheen bg-clip-text text-transparent; }
+  .text-blue-gradient { background-image: linear-gradient(90deg,#8bb8ff,#2f7bff); @apply bg-clip-text text-transparent; }
+  .card {
+    @apply relative rounded-2xl border border-white/[.08] bg-gradient-to-b from-white/[.05] to-white/[.015] shadow-card backdrop-blur-sm;
+  }
+  .card-hover { @apply transition duration-300 hover:-translate-y-0.5 hover:border-electric/40 hover:shadow-glow; }
+  .input {
+    @apply w-full rounded-xl border border-white/10 bg-navy-900/80 px-4 py-3 text-sm text-white placeholder:text-silver-600
+      transition focus:border-electric focus:outline-none focus:ring-2 focus:ring-electric/30 disabled:opacity-60;
+  }
+  .input[aria-invalid="true"] { @apply border-red-400/70; }
+  .prose-kv p { @apply mb-4 leading-relaxed text-silver-300; }
+  .prose-kv h2 { @apply mb-3 mt-10 text-xl font-semibold; }
+  .prose-kv ul { @apply mb-4 list-disc space-y-2 pl-6; }
+}
+
+/* Splash/loading screen: pure CSS so it can never get stuck if JS fails */
+@keyframes splash-out { to { opacity: 0; visibility: hidden; } }
+.splash { animation: splash-out .7s ease 1.3s forwards; }
+@keyframes splash-pulse { 0%,100% { opacity: .85; transform: scale(.985);} 50% { opacity: 1; transform: scale(1);} }
+.splash-logo { animation: splash-pulse 1.6s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+  .splash { animation-delay: .2s; }
 }
