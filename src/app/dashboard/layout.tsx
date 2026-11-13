@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 const items = [
   { href: "/dashboard", label: "Overview", icon: "LayoutDashboard" },
   { href: "/dashboard/profile", label: "Account profile", icon: "UserRound" },
-  { href: "/dashboard/verification", label: "Verification", icon: "BadgeCheck" },
+  { href: "/dashboard/invest", label: "Invest", icon: "BadgeCheck" },
   { href: "/dashboard/portfolio", label: "Portfolio", icon: "PieChart" },
   { href: "/dashboard/history", label: "Investment history", icon: "History" },
   { href: "/dashboard/transactions", label: "Transactions", icon: "ArrowLeftRight" },
