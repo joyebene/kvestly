@@ -11,11 +11,10 @@ export const dynamic = "force-dynamic";
 const items = [
   { href: "/dashboard", label: "Overview", icon: "LayoutDashboard" },
   { href: "/dashboard/profile", label: "Account profile", icon: "UserRound" },
-  { href: "/dashboard/invest", label: "Invest", icon: "BadgeCheck" },
+  { href: "/dashboard/deposits", label: "Invest", icon: "BadgeCheck" },
   { href: "/dashboard/portfolio", label: "Portfolio", icon: "PieChart" },
   { href: "/dashboard/history", label: "Investment history", icon: "History" },
   { href: "/dashboard/transactions", label: "Transactions", icon: "ArrowLeftRight" },
-  { href: "/dashboard/deposits", label: "Deposit requests", icon: "ArrowDownToLine" },
   { href: "/dashboard/withdrawals", label: "Withdrawal requests", icon: "ArrowUpFromLine" },
   { href: "/dashboard/notifications", label: "Notifications", icon: "Bell" },
   { href: "/dashboard/support", label: "Support", icon: "LifeBuoy" },
