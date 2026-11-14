@@ -263,7 +263,7 @@ export function InvestmentFundingManager() {
           type="button"
           onClick={() => fetchData(false)}
           disabled={refreshing || loading}
-          className="inline-flex items-center gap-2 rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium transition hover:bg-slate-50 disabled:opacity-50 text-white dark:hover:bg-slate-800b"
+          className="inline-flex items-center gap-2 rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium transition hover:bg-slate-50 disabled:opacity-50 text-white hover:text-black dark:hover:bg-slate-800b"
         >
           <RefreshCw
             size={15}
