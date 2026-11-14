@@ -5,12 +5,12 @@ import { z } from "zod";
 import { handle } from "@/lib/api";
 import { HttpError } from "@/lib/errors";
 import { audit } from "@/lib/audit";
+import { connectDb } from "@/lib/db";
 
 import { FundingRequest } from "@/models/FundingRequest";
 import { Notification } from "@/models/Notification";
 import { Transaction } from "@/models/Transaction";
 import { User } from "@/models/User";
-import { connectDb } from "@/lib/db";
 
 const schema = z.object({
   status: z.enum(["under_review", "approved", "rejected"]),
@@ -47,7 +47,7 @@ export const POST = handle(
     const session = await mongoose.startSession();
 
     let withdrawalUserId = "";
-    let withdrawalKind = "";
+    let withdrawalAmount = 0;
 
     try {
       await session.withTransaction(async () => {
@@ -65,6 +65,7 @@ export const POST = handle(
           );
         }
 
+        // Validate status transition.
         if (!FLOW[r.status]?.includes(body.status)) {
           throw new HttpError(
             409,
@@ -73,24 +74,33 @@ export const POST = handle(
           );
         }
 
-        // Find the associated pending transaction.
-        const transaction = await Transaction.findOne({
-          userId: r.userId,
-          type: "withdrawal",
-          description: `Withdrawal request #${r._id}`,
-          status: "pending",
-        }).session(session);
+        // Find the associated transaction only when a financial
+        // decision is being made.
+        let transaction = null;
 
-        if (!transaction) {
-          throw new HttpError(
-            409,
-            "Associated pending withdrawal transaction not found.",
-            "transaction_not_found"
-          );
+        if (body.status === "approved" || body.status === "rejected") {
+          transaction = await Transaction.findOne({
+            userId: r.userId,
+            type: "withdrawal",
+            description: {
+              $in: [
+                `Withdrawal request #${r._id}`,
+              ],
+            },
+            status: "pending",
+          }).session(session);
+
+          if (!transaction) {
+            throw new HttpError(
+              409,
+              "Associated pending withdrawal transaction not found.",
+              "transaction_not_found"
+            );
+          }
         }
 
         // Refund only when the withdrawal is rejected.
-        if (body.status === "rejected") {
+        if (body.status === "rejected" && transaction) {
           const refund = await User.updateOne(
             { _id: r.userId },
             { $inc: { balance: transaction.amountUSD } },
@@ -118,7 +128,7 @@ export const POST = handle(
               status: body.status,
               reviewedBy: user.id,
               reviewedAt: new Date(),
-              reviewNote: body.note,
+              reviewNote: body.note ?? "",
             },
           },
           { session }
@@ -132,41 +142,49 @@ export const POST = handle(
           );
         }
 
-        // Update associated transaction.
-        const transactionUpdate = await Transaction.updateOne(
-          {
-            _id: transaction._id,
-            status: "pending",
-          },
-          {
-            $set: {
-              status:
-                body.status === "approved" ? "completed" : "failed",
-              description:
-                body.status === "approved"
-                  ? `Withdrawal approved #${r._id}`
-                  : `Withdrawal rejected and refunded #${r._id}`,
-              ...(body.status === "rejected"
-                ? {
-                    balanceAfterUSD:
-                      transaction.balanceAfterUSD + transaction.amountUSD,
-                  }
-                : {}),
+        // Only complete or fail the transaction for final decisions.
+        if (transaction && (
+          body.status === "approved" ||
+          body.status === "rejected"
+        )) {
+          const transactionUpdate = await Transaction.updateOne(
+            {
+              _id: transaction._id,
+              status: "pending",
             },
-          },
-          { session }
-        );
+            {
+              $set: {
+                status:
+                  body.status === "approved" ? "completed" : "failed",
 
-        if (transactionUpdate.modifiedCount !== 1) {
-          throw new HttpError(
-            409,
-            "Withdrawal transaction has already been processed.",
-            "transaction_processed"
+                description:
+                  body.status === "approved"
+                    ? `Withdrawal approved #${r._id}`
+                    : `Withdrawal rejected and refunded #${r._id}`,
+
+                ...(body.status === "rejected"
+                  ? {
+                      balanceAfterUSD:
+                        transaction.balanceAfterUSD +
+                        transaction.amountUSD,
+                    }
+                  : {}),
+              },
+            },
+            { session }
           );
+
+          if (transactionUpdate.modifiedCount !== 1) {
+            throw new HttpError(
+              409,
+              "Withdrawal transaction has already been processed.",
+              "transaction_processed"
+            );
+          }
         }
 
         withdrawalUserId = String(r.userId);
-        withdrawalKind = r.kind;
+        withdrawalAmount = transaction?.amountUSD ?? 0;
       });
 
     } finally {
@@ -188,6 +206,7 @@ export const POST = handle(
         meta: {
           status: body.status,
           note: body.note,
+          amountUSD: withdrawalAmount,
         },
         headers: req.headers,
       },
