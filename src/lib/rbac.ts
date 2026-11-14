@@ -28,9 +28,20 @@ const map: Record<Role, readonly Permission[]> = {
   compliance: ["users:read", "products:manage", "products:publish", "requests:read", "transactions:read", "audit:read"],
   finance: ["users:read", "transactions:read", "requests:read", "requests:review"],
   admin: [
-    "users:read", "users:manage", "products:manage", "transactions:read", "requests:read",
-    "support:manage", "messages:read", "notifications:send", "content:manage", "audit:read",
-  ],
+  "users:read",
+  "users:manage",
+  "investments:read",
+  "investments:review",
+  "products:manage",
+  "transactions:read",
+  "requests:read",
+  "requests:review",
+  "support:manage",
+  "messages:read",
+  "notifications:send",
+  "content:manage",
+  "audit:read",
+],
   superadmin: PERMISSIONS,
 };
 
