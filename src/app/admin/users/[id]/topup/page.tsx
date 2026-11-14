@@ -11,11 +11,18 @@ import { postJson } from "@/lib/fetch";
 export const metadata: Metadata = { title: "Top-up User Wallet" };
 
 export default async function Page({ params }: { params: { id: string } }) {
-  const me = await requireStaff("users:manage");
+   const me = await requireStaff("users:manage");
   await connectDb();
+
+  console.log("--- Debugging Topup Page ---");
+  console.log("params.id received:", params.id);
+
   const user = await User.findById(params.id).lean();
 
+  console.log("Result of User.findById:", user);
+
   if (!user) {
+    console.log(`User with ID ${params.id} not found. Calling notFound().`);
     notFound();
   }
 
