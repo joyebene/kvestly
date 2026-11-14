@@ -1,0 +1,1 @@
+export const POST = handle({ auth: "user", schema: disableMfaSchema }, async ({ user: staffUser, body }) => {
