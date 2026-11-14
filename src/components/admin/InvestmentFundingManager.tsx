@@ -97,7 +97,7 @@ export function InvestmentFundingManager() {
             method: "GET",
             cache: "no-store",
           }),
-          fetch("/api/admin/funding/withdrawals", {
+          fetch("/api/admin/funding", {
             method: "GET",
             cache: "no-store",
           }),
@@ -183,7 +183,7 @@ export function InvestmentFundingManager() {
 
     try {
       const response = await fetch(
-        `/api/admin/funding/withdrawals/${withdrawal.id}/review`,
+        `/api/admin/funding/${withdrawal.id}/review`,
         {
           method: "POST",
           headers: {
