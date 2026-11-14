@@ -42,23 +42,7 @@ export async function FundingPage({
       <PageTitle
         title={`${kind === "deposit" ? "Deposit" : "Withdrawal"} requests`}
       />
-
-      {!enabled ? (
-        <EmptyState
-          icon={Wallet}
-          title={`${
-            kind === "deposit" ? "Deposits" : "Withdrawals"
-          } are not available yet`}
-        >
-          They will open only after our payment and custody arrangements
-          and regulatory requirements are in place and verified. We will
-          notify you here.
-        </EmptyState>
-      ) : kind === "withdrawal" ? (
         <WithdrawalApplication />
-      ) : (
-        <FundingForm kind="deposit" />
-      )}
 
       {rows.length > 0 && (
         <div className="mt-8">
