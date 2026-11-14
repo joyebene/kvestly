@@ -19,6 +19,7 @@ export interface AuthedUser {
   sessionId: string;
   email: string;
   fullName: string;
+  balance: number;
   role: Role;
   mfaEnabled: boolean;
   mfaVerified: boolean;
@@ -76,6 +77,7 @@ export async function getAuth(): Promise<AuthedUser | null> {
     sessionId: String(s._id),
     email: user.email,
     fullName: user.fullName,
+    balance: user.balance,
     role: user.role as Role,
     mfaEnabled: user.mfa?.emfaEnabled ?? false,
     mfaVerified: s.mfaVerified,
