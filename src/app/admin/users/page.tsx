@@ -25,20 +25,50 @@ export default async function Page() {
             <tr key={id}>
               <Td><p className="font-medium text-white">{u.fullName}</p><p className="text-xs text-silver-500">{u.email}</p></Td>
               <Td className="capitalize">{u.role}</Td><Td><Badge value={u.status} /></Td><Td>{u.mfa?.emfaEnabled ? "On" : "Off"}</Td><Td className="text-xs text-silver-500">{u.virtualWalletAddress || "N/A"}</Td><Td>{dateOnly(u.createdAt)}</Td>
-              {manage && <Td>{self ? <span className="text-xs text-silver-600">You</span> : (
-                <Actions actions={[
-                  u.status === "active"
-                    ? { label: "Suspend", url: `/api/admin/users/${id}/status`, body: { status: "suspended" }, variant: "danger", note: "required" }
-                    : { label: "Reactivate", url: `/api/admin/users/${id}/status`, body: { status: "active" }, note: "required" },
-                  ...(roles ? (["client", "support", "compliance", "finance", "admin"] as const).filter((r) => r !== u.role).map((r) => ({ label: `→ ${r}`, url: `/api/admin/users/${id}/role`, body: { role: r } })) : []),
-                  {
-                    label: "Top-up Wallet",
-                    url: `/admin/users/${id}/topup`,
-                    body: {},
-                    variant: "primary",
-                  },
-                ]} />
-              )}</Td>}
+              {manage && (
+                <Td>
+                  {self ? (
+                    <span className="text-xs text-silver-600">You</span>
+                  ) : (
+                    <div className="space-y-3">
+                      <Actions
+                        actions={[
+                          u.status === "active"
+                            ? {
+                              label: "Suspend",
+                              url: `/api/admin/users/${id}/status`,
+                              body: { status: "suspended" },
+                              variant: "danger",
+                              note: "required",
+                            }
+                            : {
+                              label: "Reactivate",
+                              url: `/api/admin/users/${id}/status`,
+                              body: { status: "active" },
+                              note: "required",
+                            },
+                          ...(roles
+                            ? (["client", "support", "admin"] as const)
+                              .filter((r) => r !== u.role)
+                              .map((r) => ({
+                                label: `→ ${r}`,
+                                url: `/api/admin/users/${id}/role`,
+                                body: { role: r },
+                              }))
+                            : []),
+                        ]}
+                      />
+
+                      <Link
+                        href={`/dashboard/admin/users/${id}/topup`}
+                        className="inline-flex items-center rounded-lg bg-purple-600 px-3 py-2 text-xs font-medium text-white hover:bg-purple-500"
+                      >
+                        Top-up Wallet
+                      </Link>
+                    </div>
+                  )}
+                </Td>
+              )}
             </tr>
           );
         })}
