@@ -60,7 +60,7 @@ export default async function Page() {
                       />
 
                       <Link
-                        href={`/dashboard/admin/users/${id}/topup`}
+                        href={`/admin/users/${id}/topup`}
                         className="inline-flex items-center rounded-lg bg-purple-600 px-3 py-2 text-xs font-medium text-white hover:bg-purple-500"
                       >
                         Top-up Wallet
