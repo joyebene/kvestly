@@ -24,7 +24,7 @@ export function WalletUpdateForm({
         if (!address) return;
 
         await run(
-            postJson("api/me/wallet", {
+            postJson("/api/me/wallet", {
                 walletAddress: address,
             }),
             "Wallet address updated successfully."
